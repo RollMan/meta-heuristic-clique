@@ -1,32 +1,30 @@
-function [value] = ILS(V, E)
-    
+function [values, nodes] = ILS(V, E)
     % Step 1: Initialize s0;
     s0 = randi([1, V],1);
 
     % Step 2: s=LocalSearch(s0);
     s = LocalSearch(s0, E);
-    nextSearch = -1;
-    pre_s = [];
+    searchHistory = s;
+    nextSearch = [];
 
     while 1
         % Step 3:
-        [s1, nextSearch] = Perturb(s, nextSearch, E, pre_s);
+        [s1, nextSearch, searchHistory] = Perturb(searchHistory, nextSearch, E);
         s2 = LocalSearch(s1, E);
-        pre_s = s;
-        s = Accept(s, s2);
+        [s, searchHistory] = Accept(s, s2, searchHistory);
 
         % Step 4: 
         % If terminating condition satisfied, stop;
         % else, return to Step 3.
-        if isempty(nextSearch) 
+        if isempty(searchHistory)
             break
         end
     end
     
-    value = s;
-    
+    values = size(s, 2);
+    nodes = s;
 end
-    
+   
 function solution = LocalSearch(s, E)
     solution = s;
     numE = size(E, 1);
@@ -92,35 +90,33 @@ function judge = CheckCreek(solution, E, nextV)
     
 end
 
-function [s1, nextSearch] = Perturb(s, nextSearch, E, pre_s)
-    if size(s, 2) == size(pre_s, 2)
-        if s == pre_s
-            s1 = nextSearch(1);
-            nextSearch(1) = [];
-        end
+function [s1, nextSearch, searchHistory] = Perturb(searchHistory, nextSearch, E)
+    if not(isempty(nextSearch))
+        s1 = nextSearch(1);
+        nextSearch(1) = [];
+        
     else
-        nextSearch = [];
+        sh1 = searchHistory(1);
         numE = size(E, 1);
         for i = 1:numE
-            if E(i, 1) == s(1) && E(i, 2) ~= s(2)
-            %if E(i, 1) == s(1)
+            if E(i, 1) == sh1
                 nextSearch = horzcat(nextSearch, E(i, 2));
-            elseif E(i, 2) == s(1) && E(i, 2) ~= s(2)
-            %elseif E(i, 2) == s(1)
+            elseif E(i, 2) == sh1
                 nextSearch = horzcat(nextSearch, E(i, 1));
             else
                 continue
             end
         end
         
-        s1 = nextSearch(1);
-        nextSearch(1) = [];
-            
+        s1 = searchHistory(1);
+        searchHistory(1) = [];
     end
+   
 end
 
-function s = Accept(s, s2)
+function [s, searchHistory] = Accept(s, s2, searchHistory)
     if size(s, 2) < size(s2, 2)
         s = s2;
+        searchHistory = s2;
     end
 end
