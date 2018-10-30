@@ -4,7 +4,7 @@ function [best_score, best_nodes] = SA(V, E)
     prev_score = 0;
     prev_nodes = [];
     T = 50;
-    T_end = 1e-3;
+    T_end = 1e-4;
     
     while T >= T_end
        curr_nodes = neighborhood(V, prev_nodes);
