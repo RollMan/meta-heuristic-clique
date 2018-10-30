@@ -3,8 +3,8 @@ function [best_score, best_nodes] = SA(V, E)
     best_nodes = [];
     prev_score = 0;
     prev_nodes = [];
-    T = 10000;
-    T_end = 0;
+    T = 50;
+    T_end = 1e-3;
     
     while T >= T_end
        curr_nodes = neighborhood(V, prev_nodes);
@@ -14,11 +14,12 @@ function [best_score, best_nodes] = SA(V, E)
            best_nodes = curr_nodes;
        end
        
-       next_prob = exp(-(curr_score-prev_score)/T);
+       next_prob = exp(-(-curr_score+prev_score)/T); % sign is reversed because this is maximization problem.
+       % next_prob = exp(-(curr_score-prev_score)/T);
        if (curr_score > prev_score) || (next_prob > rand)
            prev_score = curr_score;
            prev_nodes = curr_nodes;
        end
-       T = T - 1;
+       T = T - 0.0001;
     end
 end
