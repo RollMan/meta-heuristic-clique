@@ -1,9 +1,21 @@
 function score = evaluation(V, E, nodes)
     G = build_adjacency_matrix(V, E);
-    for i = 1:size(nodes)
-        s = nodes(i);
-        for j = 1:size(nodes)
-            t = nodes(j);
+    
+    if size(nodes, 2) == 0
+        score = 0;
+        return;
+    end
+    
+    if size(nodes, 2) == 0
+        
+        score = 0;
+        return
+    end
+    
+    for i = 1:size(nodes, 2)
+        s = nodes(1, i);
+        for j = 1:size(nodes, 2)
+            t = nodes(1, j);
             if s == t
                 continue;
             end
@@ -13,5 +25,5 @@ function score = evaluation(V, E, nodes)
             end
         end
     end
-    score = size(nodes);
+    score = size(nodes,2);
 end
