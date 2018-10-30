@@ -1,2 +1,3 @@
 #!/bin/bash
-gibo dump Matlab > .gitignore
+gibo dump Matlab C C++ > .gitignore
+echo "02_random_*.in" >> .gitignore
