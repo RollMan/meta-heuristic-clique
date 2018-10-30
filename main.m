@@ -1,7 +1,7 @@
 NODEFILE = "testcases/02_random_node_%02d.in";
 EDGEFILE = "testcases/02_random_edge_%02d.in";
 
-TESTCASE_NUM = 20;
+TESTCASE_NUM = 8;
 
 result = cell(TESTCASE_NUM, 4, 2, 3); %(case, algorithm, {value, time}, {avg, max, min})
 for i = 1:TESTCASE_NUM
@@ -23,7 +23,7 @@ for testcase = 1:TESTCASE_NUM
         disp("---SA---");
         tic;
         [value, nodes] = SA(V, E)
-        t = toc;
+        t = toc
         result{testcase, 1, 1, 1} = result{testcase, 1, 1, 1} + value; 
         result{testcase, 1, 1, 2} = max(result{testcase, 1, 1, 2}, value);
         result{testcase, 1, 1, 3} = min(result{testcase, 1, 1, 3}, value);
@@ -34,7 +34,7 @@ for testcase = 1:TESTCASE_NUM
         % disp("---TS---");
         % tic;
         % [value, nodes] = TS(V, E)
-        % t = toc;
+        % t = toc
         % result{testcase, 2, 1, 1} = result{testcase, 2, 1, 1} + value; 
         % result{testcase, 2, 1, 2} = max(result{testcase, 2, 1, 2}, value);
         % result{testcase, 2, 1, 3} = min(result{testcase, 2, 1, 3}, value);
@@ -44,8 +44,8 @@ for testcase = 1:TESTCASE_NUM
 
         disp("---ILS---");
         tic;
-        value = ILS(V, E)
-        t = toc;
+        [value, nodes] = ILS(V, E)
+        t = toc
         result{testcase, 3, 1, 1} = result{testcase, 3, 1, 1} + value; 
         result{testcase, 3, 1, 2} = max(result{testcase, 3, 1, 2}, value);
         result{testcase, 3, 1, 3} = min(result{testcase, 3, 1, 3}, value);
@@ -56,12 +56,20 @@ for testcase = 1:TESTCASE_NUM
         % disp("---GLS---");
         % tic;
         % [value, nodes] = GLS(V, E)
-        % toc;
+        % t = toc
         % result{testcase, 4, 1, 1} = result{testcase, 4, 1, 1} + value; 
         % result{testcase, 4, 1, 2} = max(result{testcase, 4, 1, 2}, value);
         % result{testcase, 4, 1, 3} = min(result{testcase, 4, 1, 3}, value);
         % result{testcase, 4, 2, 1} = result{testcase, 4, 2, 1} + t;
         % result{testcase, 4, 2, 2} = max(result{testcase, 4, 2, 2}, t);
         % result{testcase, 4, 2, 3} = min(result{testcase, 4, 2, 3}, t);
+        
+
+
+    end
+    for i = 1:4
+        for j = 1:2
+            result{testcase, i, j, 1} = result{testcase, i, j, 1} / 10.0;
+        end
     end
 end
