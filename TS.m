@@ -77,11 +77,10 @@ function [value, nodes] = TS(V, E)
         end
 
         %タブリストの更新
-        if sum(now_node) == sum(next_node) + 1
-            for l = 1:V
-                if now_node(l) ~= next_node(l)
-                    tabu_list(l) = tabu_size;
-                end
+        for l = 1:V
+            if now_node(l) == next_node(l) + 1
+                tabu_list(l) = tabu_size;
+                break
             end
         end
 
