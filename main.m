@@ -20,7 +20,7 @@ for testcase = 1:TESTCASE_NUM
     E = importdata(sprintf(EDGEFILE, testcase-1));
     
     for cnt = 1:10
-        %{
+        
         disp("---SA---");
         tic;
         [value, nodes] = SA(V, E)
@@ -31,7 +31,7 @@ for testcase = 1:TESTCASE_NUM
         result{testcase, 1, 2, 1} = result{testcase, 1, 2, 1} + t;
         result{testcase, 1, 2, 2} = max(result{testcase, 1, 2, 2}, t);
         result{testcase, 1, 2, 3} = min(result{testcase, 1, 2, 3}, t);
-        %}
+        
          disp("---TS---");
          tic;
          [value, nodes] = TS(V, E)
@@ -42,7 +42,7 @@ for testcase = 1:TESTCASE_NUM
          result{testcase, 2, 2, 1} = result{testcase, 2, 2, 1} + t;
          result{testcase, 2, 2, 2} = max(result{testcase, 2, 2, 2}, t);
          result{testcase, 2, 2, 3} = min(result{testcase, 2, 2, 3}, t);
-         %{
+         
         disp("---ILS---");
         tic;
         [value, nodes] = ILS(V, E)
@@ -64,7 +64,7 @@ for testcase = 1:TESTCASE_NUM
         % result{testcase, 4, 2, 1} = result{testcase, 4, 2, 1} + t;
         % result{testcase, 4, 2, 2} = max(result{testcase, 4, 2, 2}, t);
         % result{testcase, 4, 2, 3} = min(result{testcase, 4, 2, 3}, t);
-         %}
+        
 
     end
     for i = 1:4
