@@ -7,7 +7,7 @@ function [value, nodes] = TS(V, E)
     
     
     tabu_list = zeros(1,V);
-    now_node  = randi([0 1],1,V) %initialize node
+    now_node  = randi([0 1],1,V); %initialize node
 
     G = graph;
     G = addnode(G,V);
@@ -23,7 +23,7 @@ function [value, nodes] = TS(V, E)
 
     for i = 1:N
 
-        neighbor_list = []
+        neighbor_list = [];
 
         for t = 1:V
             if tabu_list(t) > 0
@@ -58,7 +58,7 @@ function [value, nodes] = TS(V, E)
             if r1 ~= 0
                 break
             end
-            k_index = find(neighbor_list(1:size(neighbor_list,1),V+1) == k)
+            k_index = find(neighbor_list(1:size(neighbor_list,1),V+1) == k);
             if sum(k_index) > 0 
                 for j = 1:numel(k_index)
                     sort_list = CombList(sort_list,neighbor_list(k_index(j),1:size(neighbor_list,2)));
@@ -103,14 +103,14 @@ function clique_num = CliqueSize(A,subnode)
    a = 0;
    CL = 0;
    
-   list = []
+   list = [];
    for i = 1:numel(subnode)
        if subnode(i) == 1
            list(end+1) = i;
        end
    end
    
-   CL_ans = numel(list)*(numel(list)-1)/2
+   CL_ans = numel(list)*(numel(list)-1)/2;
 
    
    if numel(list) == 1
@@ -149,11 +149,11 @@ function swap_list = Swap(A,nodes,tabu_list,V)
             if tabu_list(j) == 0 && nodes(j) == 1
                 for k = 1:V
                     tmp = [];
-                    new_node = nodes
+                    new_node = nodes;
                     if tabu_list(k) == 0 && nodes(k) == 0
                         new_node(j) = 0;
                         new_node(k) = 1;
-                        swap_list = CombList(swap_list,new_node)
+                        swap_list = CombList(swap_list,new_node);
                     end
                 end
             end
@@ -167,9 +167,9 @@ function insert_list = Insert(A,nodes,tabu_list,V)
     insert_list = [];
     for i = 1:V
         if nodes(i) == 0 && tabu_list(i) == 0
-            new_node = nodes
-            new_node(i) = 1
-            insert_list = CombList(insert_list,new_node)
+            new_node = nodes;
+            new_node(i) = 1;
+            insert_list = CombList(insert_list,new_node);
         end
     end
     
@@ -182,7 +182,7 @@ function delete_list = Delete(A,nodes,tabu_list,V)
     delete_list = [];
 
     for i = 1:V
-        new_node = nodes
+        new_node = nodes;
         if nodes(i) == 0 || tabu_list(i) > 0
             continue
         end
@@ -190,14 +190,14 @@ function delete_list = Delete(A,nodes,tabu_list,V)
         if sum(new_node) == 0 
             continue
         end
-        delete_list = CombList(delete_list,new_node)
+        delete_list = CombList(delete_list,new_node);
     end
 end
 
 function list = CombList(list,node)
     if isempty(list)
-        list = node
+        list = node;
     else
-        list = vertcat(list,node)
+        list = vertcat(list,node);
     end
 end
