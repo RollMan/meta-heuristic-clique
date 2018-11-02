@@ -19,11 +19,13 @@ for testcase = 1:TESTCASE_NUM
     V = importdata(sprintf(NODEFILE, testcase-1));
     E = importdata(sprintf(EDGEFILE, testcase-1));
     
+    G = build_adjacency_list(V, E);
+    
     for cnt = 1:10
         fprintf("(%d, %d)", testcase, cnt);
         disp("---SA---");
         tic;
-        [value, nodes] = SA(V, E)
+        [value, nodes] = SA(G)
         t = toc
         result{testcase, 1, 1, 1} = result{testcase, 1, 1, 1} + value; 
         result{testcase, 1, 1, 2} = max(result{testcase, 1, 1, 2}, value);
@@ -34,7 +36,7 @@ for testcase = 1:TESTCASE_NUM
         
          % disp("---TS---");
          % tic;
-         % [value, nodes] = TS(V, E)
+         % [value, nodes] = TS(G)
          % t = toc
          % result{testcase, 2, 1, 1} = result{testcase, 2, 1, 1} + value; 
          % result{testcase, 2, 1, 2} = max(result{testcase, 2, 1, 2}, value);
@@ -45,7 +47,7 @@ for testcase = 1:TESTCASE_NUM
          
         disp("---ILS---");
         tic;
-        [value, nodes] = ILS(V, E)
+        [value, nodes] = ILS(G)
         t = toc
         result{testcase, 3, 1, 1} = result{testcase, 3, 1, 1} + value; 
         result{testcase, 3, 1, 2} = max(result{testcase, 3, 1, 2}, value);
@@ -56,7 +58,7 @@ for testcase = 1:TESTCASE_NUM
 
         % disp("---GLS---");
         % tic;
-        % [value, nodes] = GLS(V, E)
+        % [value, nodes] = GLS(G)
         % t = toc
         % result{testcase, 4, 1, 1} = result{testcase, 4, 1, 1} + value; 
         % result{testcase, 4, 1, 2} = max(result{testcase, 4, 1, 2}, value);
