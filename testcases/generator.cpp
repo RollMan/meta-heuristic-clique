@@ -4,7 +4,7 @@
 #include "testlib.h"
 using namespace std;
 
-const int CASE = 20;
+const int CASE = 5;
 const int MIN_V = 1;
 const int MAX_V = 300;
 
