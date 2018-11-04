@@ -1,13 +1,15 @@
-function S = neighborhoods(state)
+function S = neighborhoods(state_struct, problemData)
+    %state = state_struct.x;
+    state = state_struct;
     msize = size(state, 2);
     S = zeros(msize, msize);
     for i = 1:msize
         for j = 1:msize
-            for rev_idx = 1:msize
-                if j == rev_idx
-                    S(i, j) = mod(state(j)+1, 2);
+            for k = 1:msize
+                if j == k
+                    S(j, k) = mod(state(k)+1, 2);
                 else
-                    S(i, j) = state(j);
+                    S(j, k) = state(k);
                 end
             end
         end
