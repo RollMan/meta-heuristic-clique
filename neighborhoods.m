@@ -1,6 +1,5 @@
 function S = neighborhoods(state_struct, problemData)
-    %state = state_struct.x;
-    state = state_struct;
+    state = state_struct.x;
     msize = size(state, 2);
     S = zeros(msize, msize);
     for i = 1:msize
