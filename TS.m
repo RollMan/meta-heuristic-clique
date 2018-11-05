@@ -7,7 +7,6 @@ function [value, nodes] = TS(G,V, E)
     
     tabu_list = zeros(1,V);
     now_node  = randi([0 1],1,V); %initialize node
-    disp(now_node);
     
     G = build_adjacency_matrix(V,E);
     
@@ -15,6 +14,11 @@ function [value, nodes] = TS(G,V, E)
     now_value = value;
 
     for i = 1:N
+        
+        i_info = ['time=',num2str(i)];
+        disp(i_info);
+        disp("nownode");
+        disp(now_node);
 
         neighbor_list = [];
 
@@ -25,8 +29,8 @@ function [value, nodes] = TS(G,V, E)
         end
 
         %1入れ替�?
-        %swap_list = Swap(A,now_node,tabu_list,V);
-        %neighbor_list = vertcat(neighbor_list,swap_list);
+        swap_list = Swap(G,now_node,tabu_list,V);
+        neighbor_list = vertcat(neighbor_list,swap_list);
         %2追�?
         insert_list = Insert(G,now_node,tabu_list,V);
         disp(insert_list);
@@ -39,7 +43,6 @@ function [value, nodes] = TS(G,V, E)
         if isempty(neighbor_list) == 0
             break
         else
-            disp(size(neighbor_list,1));
             neighbor_list(size(neighbor_list,1),V+1) = 0;
         end
         
@@ -87,68 +90,33 @@ function [value, nodes] = TS(G,V, E)
         now_node = next_node;
         now_value = next_value;
 
-    end       
+    end
+    
+    disp("best parameter");
     
 end
 
-function clique_num = CliqueSize(A,subnode)
 
-
-   a = 0;
-   CL = 0;
-   
-   list = [];
-   for i = 1:numel(subnode)
-       if subnode(i) == 1
-           list(end+1) = i;
-       end
-   end
-   
-   CL_ans = numel(list)*(numel(list)-1)/2;
-
-   
-   if numel(list) == 1
-       clique_num = 0;
-       return
-   end
-   
-   C = nchoosek(list,2);
-
-   for i = 1:size(C,1)
-      if A(C(i,1),C(i,2)) == 1
-        CL = CL + 1;
-      end
-   end
-   
-   if CL == CL_ans
-       clique_num = numel(list);
-   elseif CL == 1 && CL_ans == 2
-       clique_num = 2;
-       
-   else
-       clique_num = 0;
-   end
-
-end
-
-function swap_list = Swap(A,nodes,tabu_list,V)
+function swap_list = Swap(G,nodes,tabu_list,V)
 
     swap_list = [];
 
     for i = 1:V
-        if nodes(i) == 0 | tabu_list(i) > 0
+        if nodes(i) == 0 || tabu_list(i) > 0
             continue
         end
         for j = i:V
             if tabu_list(j) == 0 && nodes(j) == 1
                 for k = 1:V
-                    tmp = [];
                     new_node = nodes;
                     if tabu_list(k) == 0 && nodes(k) == 0
                         new_node(j) = 0;
                         new_node(k) = 1;
                         swap_list = CombList(swap_list,new_node);
                     end
+                    %if is_clique(new_node,G) == true
+                        swap_list = CombList(swap_list,new_node);
+                    %end
                 end
             end
         end

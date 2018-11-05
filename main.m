@@ -19,12 +19,9 @@ for testcase = 1:TESTCASE_NUM
     V = importdata(sprintf(NODEFILE, testcase-1));
     E = importdata(sprintf(EDGEFILE, testcase-1));
     
-    disp(V);
-    disp(E);
     
     G = build_adjacency_list(V, E);
     
-    disp(G);
     
     for cnt = 1:10
         
