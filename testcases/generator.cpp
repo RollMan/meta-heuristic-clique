@@ -6,7 +6,7 @@ using namespace std;
 
 const int CASE = 5;
 const int MIN_V = 1;
-const int MAX_V = 300;
+const int MAX_V = 100;
 
 int main(int argc, char* argv[]){
   random_device rng;
