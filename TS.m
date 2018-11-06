@@ -1,27 +1,24 @@
-function [value, nodes] = TS(V, E)
+function [value, nodes] = TS(G,V, E)
 
     N = 10; %探索回数
-    tabu_size = 5; %タブリストに入れておく回数
+    tabu_size = 2; %タブリストに入れておく回数
     nodes = [];
-    nodes_old = [];
     
     
     tabu_list = zeros(1,V);
     now_node  = randi([0 1],1,V); %initialize node
-
-    G = graph;
-    G = addnode(G,V);
-    for node_num = 1:size(E,1)
-        G = addedge(G,E(node_num,1),E(node_num,2));
-    end
-   
-    %Gの接続行列
-    A = adjacency(G);
     
-    value = CliqueSize(A,now_node);
+    G = build_adjacency_matrix(V,E);
+    
+    value = evaluation(now_node,G);
     now_value = value;
 
     for i = 1:N
+        
+        i_info = ['time=',num2str(i)];
+        disp(i_info);
+        disp("nownode");
+        disp(now_node);
 
         neighbor_list = [];
 
@@ -31,27 +28,33 @@ function [value, nodes] = TS(V, E)
             end
         end
 
-        %1入れ替え
-        swap_list = Swap(A,now_node,tabu_list,V);
+        %1入れ替�?
+        swap_list = Swap(G,now_node,tabu_list,V);
         neighbor_list = vertcat(neighbor_list,swap_list);
-        %2追加
-        insert_list = Insert(A,now_node,tabu_list,V);
+        %2追�?
+        insert_list = Insert(G,now_node,tabu_list,V);
+        disp(insert_list);
         neighbor_list = vertcat(neighbor_list,insert_list);
         %3削除
-        delete_list = Delete(A,now_node,tabu_list,V);
+        delete_list = Delete(G,now_node,tabu_list,V);
+        disp(delete_list);
         neighbor_list = vertcat(neighbor_list,delete_list);
         
-        neighbor_list(size(neighbor_list,1),V+1) = 0;
+        if isempty(neighbor_list) == 0
+            break
+        else
+            neighbor_list(size(neighbor_list,1),V+1) = 0;
+        end
         
         %クリークサイズ
         for j = 1:size(neighbor_list,1)
-            clique_num = CliqueSize(A,neighbor_list(j,1:V));
+            clique_num = evaluation(neighbor_list(j,1:V),A);
 
-            %listのV+1にクリークサイズを追加
+            %listのV+1にクリークサイズを追�?
             neighbor_list(j,V+1) = clique_num;
         end
         
-        %次の状態の洗濯
+        %次の状態�?�洗濯
         sort_list = [];
         r1 = 0;
         for k = V:-1:0
@@ -73,10 +76,10 @@ function [value, nodes] = TS(V, E)
         %選択解がbestな時更新
         if value < next_value
             value = next_value;
-            nodes_old = next_node;
+            nodes = next_node;
         end
 
-        %タブリストの更新
+        %タブリスト�?�更新
         for l = 1:V
             if now_node(l) == next_node(l) + 1
                 tabu_list(l) = tabu_size;
@@ -88,73 +91,32 @@ function [value, nodes] = TS(V, E)
         now_value = next_value;
 
     end
-
-    for i = 1:V
-        if nodes_old(i) == 1
-            nodes(end+1) = i;
-        end
-    end            
+    
+    disp("best parameter");
     
 end
 
-function clique_num = CliqueSize(A,subnode)
 
-
-   a = 0;
-   CL = 0;
-   
-   list = [];
-   for i = 1:numel(subnode)
-       if subnode(i) == 1
-           list(end+1) = i;
-       end
-   end
-   
-   CL_ans = numel(list)*(numel(list)-1)/2;
-
-   
-   if numel(list) == 1
-       clique_num = 0;
-       return
-   end
-   
-   C = nchoosek(list,2);
-
-   for i = 1:size(C,1)
-      if A(C(i,1),C(i,2)) == 1
-        CL = CL + 1;
-      end
-   end
-   
-   if CL == CL_ans
-       clique_num = numel(list);
-   elseif CL == 1 && CL_ans == 2
-       clique_num = 2;
-       
-   else
-       clique_num = 0;
-   end
-
-end
-
-function swap_list = Swap(A,nodes,tabu_list,V)
+function swap_list = Swap(G,nodes,tabu_list,V)
 
     swap_list = [];
 
     for i = 1:V
-        if nodes(i) == 0 | tabu_list(i) > 0
+        if nodes(i) == 0 || tabu_list(i) > 0
             continue
         end
         for j = i:V
             if tabu_list(j) == 0 && nodes(j) == 1
                 for k = 1:V
-                    tmp = [];
                     new_node = nodes;
                     if tabu_list(k) == 0 && nodes(k) == 0
                         new_node(j) = 0;
                         new_node(k) = 1;
                         swap_list = CombList(swap_list,new_node);
                     end
+                    %if is_clique(new_node,G) == true
+                        swap_list = CombList(swap_list,new_node);
+                    %end
                 end
             end
         end
@@ -162,22 +124,26 @@ function swap_list = Swap(A,nodes,tabu_list,V)
 
 end
 
-function insert_list = Insert(A,nodes,tabu_list,V)
+function insert_list = Insert(G,nodes,tabu_list,V)
     
     insert_list = [];
     for i = 1:V
         if nodes(i) == 0 && tabu_list(i) == 0
             new_node = nodes;
             new_node(i) = 1;
-            insert_list = CombList(insert_list,new_node);
+        else 
+            continue
         end
+        %if is_clique(new_node,G) == true
+            insert_list = CombList(insert_list,new_node);
+        %end
     end
     
 
 
 end
 
-function delete_list = Delete(A,nodes,tabu_list,V)
+function delete_list = Delete(G,nodes,tabu_list,V)
 
     delete_list = [];
 
@@ -190,7 +156,9 @@ function delete_list = Delete(A,nodes,tabu_list,V)
         if sum(new_node) == 0 
             continue
         end
-        delete_list = CombList(delete_list,new_node);
+        %if is_clique(new_node,G) == true
+            delete_list = CombList(delete_list,new_node);
+        %end
     end
 end
 

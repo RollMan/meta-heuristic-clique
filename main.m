@@ -23,7 +23,11 @@ for testcase = 1:TESTCASE_NUM
     
     G = build_adjacency_matrix(V, E);
     
+    
     for cnt = 1:10
+        
+        %{
+        
         fprintf("(%d, %d)", testcase, cnt);
         disp("---SA---");
         tic;
