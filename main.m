@@ -1,7 +1,7 @@
-% NODEFILE = "testcases/01_hand_node_%02d.in";
-% EDGEFILE = "testcases/01_hand_edge_%02d.in";
-NODEFILE = "testcases/02_random_node_%02d.in";
-EDGEFILE = "testcases/02_random_edge_%02d.in";
+NODEFILE = "testcases/01_hand_node_%02d.in";
+EDGEFILE = "testcases/01_hand_edge_%02d.in";
+% NODEFILE = "testcases/02_random_node_%02d.in";
+% EDGEFILE = "testcases/02_random_edge_%02d.in";
 
 TESTCASE_NUM = 4;
 rng('shuffle')
@@ -26,7 +26,6 @@ for testcase = 1:TESTCASE_NUM
     
     for cnt = 1:10
         
-        %{
         
         fprintf("(%d, %d)", testcase, cnt);
         disp("---SA---");
@@ -41,17 +40,18 @@ for testcase = 1:TESTCASE_NUM
         result{testcase, 1, 2, 2} = max(result{testcase, 1, 2, 2}, t);
         result{testcase, 1, 2, 3} = min(result{testcase, 1, 2, 3}, t);
         %}
-         % disp("---TS---");
-         % tic;
-         % [value, nodes] = TS(G)
-         % t = toc
-         % result{testcase, 2, 1, 1} = result{testcase, 2, 1, 1} + value; 
-         % result{testcase, 2, 1, 2} = max(result{testcase, 2, 1, 2}, value);
-         % result{testcase, 2, 1, 3} = min(result{testcase, 2, 1, 3}, value);
-         % result{testcase, 2, 2, 1} = result{testcase, 2, 2, 1} + t;
-         % result{testcase, 2, 2, 2} = max(result{testcase, 2, 2, 2}, t);
-         % result{testcase, 2, 2, 3} = min(result{testcase, 2, 2, 3}, t);
-        %{ 
+        disp("---TS_Y---");
+        tic;
+        [value, nodes] = TS_Y(G)
+        t = toc
+        result{testcase, 2, 1, 1} = result{testcase, 2, 1, 1} + value; 
+        result{testcase, 2, 1, 2} = max(result{testcase, 2, 1, 2}, value);
+        result{testcase, 2, 1, 3} = min(result{testcase, 2, 1, 3}, value);
+        result{testcase, 2, 2, 1} = result{testcase, 2, 2, 1} + t;
+        result{testcase, 2, 2, 2} = max(result{testcase, 2, 2, 2}, t);
+        result{testcase, 2, 2, 3} = min(result{testcase, 2, 2, 3}, t);
+         
+        %{
         disp("---ILS---");
         tic;
         [value, nodes] = ILS(G)
